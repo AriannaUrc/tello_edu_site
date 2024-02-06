@@ -31,16 +31,46 @@ function RotateLeft () {
     istruzioni.push("rotateleft")
     //fetch('/rotateleft',  {method: 'POST'})
 }
-function Esegui () {
-    //const response = fetch('/connect', {method: 'POST'});
-    for(i=0;i<istruzioni.length;i++){
-        while(!response.ok){
-            console.log("Sto aspettando");
-        }    
-        response = fetch('/'+istruzioni[i], {method: 'POST'});
-        /*setTimeout(function(){
-        }, 5000); */      
-        console.log(istruzioni[i] + " fatta.") 
-    }
+async function Esegui () {
+    //document.getElementById("esegui").disabled = true;
+
+    console.lot("Eseguendo!")
+    istruzioni2 = istruzioni
     istruzioni = []
+    i=0
+
+    console.log(istruzioni2);
+    if(istruzioni2.length>0){
+        try{
+            fetch('/connect', {method: 'POST'});
+        }
+        catch(err)
+        {
+            console.log("Catturato" + err);
+        }
+
+        await wait(2000)
+        for(i=0;i<istruzioni2.length;i++){
+            /*while(!response.ok){
+                console.log("Sto aspettando");
+            }*/    
+            try{
+                response = fetch('/'+istruzioni2[i], {method: 'POST'});
+            }
+            catch(err)
+            {
+                console.log("Catturato" + err);
+            }
+            /*setTimeout(function(){
+            }, 5000); */
+            await wait(8000)  
+
+            console.log(istruzioni2[i] + " fatta.") 
+        }
+    }
+
+    //document.getElementById("esegui").disabled = false;
 }
+
+const wait = (msec) => new Promise((resolve, _) => {
+    setTimeout(resolve, msec)});
