@@ -3,12 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Drone Tello</title>
 </head>
 <body>
-    <button onclick="Connect()" type="button">Connect</button>
-    <button onclick="TakeOff()" type="button">takeOff</button>
-    <button onclick="Land()" type="button">land</button>
+    <h1>Comandi drone</h1>
+    <table> 
+        <tr>
+            <td><button onclick="Connect()" type="button">Connect</button></td>
+            <td><button onclick="TakeOff()" type="button">takeOff</button></td>
+            <td><button onclick="Forward()" type="button">forward</button></td>
+            <td><button onclick="Land()" type="button">land</button></td>
+            <td><button onclick="RotateRight()" type="button">rotateright</button></td>
+            <td><button onclick="RotateLeft()" type="button">rotateleft</button></td>
+            <td><button onclick="Esegui()" type="button">Esegui istruzioni</button></td>
+        </tr> 
+    </table>
+    
+    
+    
+    
+
     <script src="js/app.js"></script>
 </body>
 </html>

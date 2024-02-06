@@ -3,6 +3,7 @@ const app = express()
 const sdk = require('tellojs')
 
 const waitMedium = 2000
+const waitLarge = 2000
 
 app.use(express.static('www'))
 app.set('view engine', 'ejs')
@@ -21,17 +22,12 @@ app.use('/users', userRouter)
 app.post('/connect', async (req, res) => {
     console.log('Connecting');
     await sdk.control.connect()
-  
-    let battery = await sdk.read.battery() 
+        let battery = await sdk.read.battery() 
+        console.log(`Battery: ${battery}`)
+        res.sendStatus(200);
+
+        console.log('Connected');
     
-    console.log(`Battery: ${battery}`)
-    await new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve()
-        }, waitMedium);
-    })
-    res.sendStatus(200);
-    console.log('Connected');
 });
 
 app.post('/takeOff', async (req, res) => {
@@ -40,15 +36,60 @@ app.post('/takeOff', async (req, res) => {
     await new Promise((resolve, reject) => {
         setTimeout(() => {
             resolve()
-        }, waitMedium);
+        }, 0);
     })
     res.sendStatus(200);
     console.log('Took off');
 })
+app.post('/forward', async (req, res) => {
+    console.log('Moving forward...');
+    await sdk.control.move.front(100) 
+    await new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve()
+        }, waitMedium);
+    })
+    res.sendStatus(200);
+    console.log('Moved');
+})
+//flipping right function
+app.post('/rotateright', async (req, res) => {
+    console.log('rotate right...');
+    try{
+        await sdk.control.rotate.clockwise(90)
+    }catch(error){
+        console.log(error);
+    }
+    await new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve()
+        }, waitLarge);
+    })
+    res.sendStatus(200);
+    console.log('rotated right');
+})
 
+app.post('/rotateleft', async (req, res) => {
+    console.log('rotate left...');
+    try{
+        await sdk.control.rotate.counterClockwise(90)
+    }catch(error){
+        console.log(error);
+    }
+    await new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve()
+        }, waitLarge);
+    })
+    res.sendStatus(200);
+    console.log('rotated left');
+})
+
+//landing function
 app.post('/land', async (req, res) => { //add try catch
     console.log('landing...');
-    await sdk.control.land()
+    try {
+        await sdk.control.land()
     await new Promise((resolve, reject) => {
         setTimeout(() => {
             resolve()
@@ -56,6 +97,13 @@ app.post('/land', async (req, res) => { //add try catch
     })
     res.sendStatus(200);
     console.log('Landed');
+    } 
+    
+    catch (error) {
+        console.log("error");
+        res.sendStatus(200);
+    }
+    
 })
 
 app.listen(3000)
