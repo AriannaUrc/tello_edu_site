@@ -32,8 +32,6 @@ app.post('/connect', async (req, res) => {
     } catch(error){
         console.log("Catched: " + error)
     } 
-    
-    
 });
 
 app.post('/takeOff', async (req, res) => {
@@ -47,6 +45,7 @@ app.post('/takeOff', async (req, res) => {
     } 
 
 })
+
 app.post('/forward', async (req, res) => {
     try{
     console.log('Moving forward...');
@@ -58,20 +57,86 @@ app.post('/forward', async (req, res) => {
     } 
 })
 
-
-app.post('/rotateright', async (req, res) => {
-    console.log('rotate right...');
-    await sdk.control.rotate.clockwise(90)
+app.post('/backward', async (req, res) => {
+    try{
+    console.log('Moving backward...');
+    await sdk.control.move.back(100)
     await wait(waitMedium)
-    console.log('rotated')
+    console.log('moved')
+    } catch(error){
+        console.log("Catched: " + error)
+    } 
+})
+
+app.post('/up', async (req, res) => {
+    try{
+    console.log('Moving up...');
+    await sdk.control.move.up(100)
+    await wait(waitMedium)
+    console.log('moved')
+    } catch(error){
+        console.log("Catched: " + error)
+    } 
+})
+
+app.post('/down', async (req, res) => {
+    try{
+    console.log('Moving down...');
+    await sdk.control.move.down(100)
+    await wait(waitMedium)
+    console.log('moved')
+    } catch(error){
+        console.log("Catched: " + error)
+    } 
+})
+
+app.post('/left', async (req, res) => {
+    try{
+    console.log('Moving left...');
+    await sdk.control.move.left(100)
+    await wait(waitMedium)
+    console.log('moved')
+    } catch(error){
+        console.log("Catched: " + error)
+    } 
+})
+
+app.post('/right', async (req, res) => {
+    try{
+    console.log('Moving right...');
+    await sdk.control.move.right(100)
+    await wait(waitMedium)
+    console.log('moved')
+    } catch(error){
+        console.log("Catched: " + error)
+    } 
+})
+
+app.post('/rotateRight', async (req, res) => {
+    try{
+        console.log('rotate right...');
+        await sdk.control.rotate.clockwise(90)
+        await wait(waitMedium)
+        console.log('rotated')
+    }
+    catch(error)
+    {
+        console.log("Catched: " + error)
+    } 
+    
 })
 
 app.post('/rotateleft', async (req, res) => {
-    console.log('rotate left...');
-    await sdk.control.rotate.counterClockwise(90)
-    await wait(waitMedium)
-    console.log('rotated')
-    
+    try{
+        console.log('rotate left...');
+        await sdk.control.rotate.counterClockwise(90)
+        await wait(waitMedium)
+        console.log('rotated')
+    }
+    catch(error)
+    {
+        console.log("Catched: " + error)
+    }     
 })
 
 //landing function
@@ -92,18 +157,3 @@ const wait = (msec) => new Promise((resolve, _) => {
     setTimeout(resolve, msec)});
 
 app.listen(3000)
-
-
-/* try{
-    await sdk.control.rotate.counterClockwise(90)
-    await new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve()
-        }, waitMedium);
-    })
-    res.sendStatus(200);
-    console.log('rotated left');
-}catch(error){
-    console.log(error);
-    res.sendStatus(404);
-} */
