@@ -9,14 +9,31 @@
     <h1>Comandi drone</h1>
     <table> 
         <tr>
-            <td><button onclick="Connect()" type="button">Connect</button></td>
-            <td><button onclick="TakeOff()" type="button">takeOff</button></td>
-            <td><button onclick="Forward()" type="button">forward</button></td>
-            <td><button onclick="Land()" type="button">land</button></td>
-            <td><button onclick="RotateRight()" type="button">rotateright</button></td>
-            <td><button onclick="RotateLeft()" type="button">rotateleft</button></td>
+            <td><button onclick="istruzioni.push('takeOff')" type="button">takeOff</button></td>
+            <td><button onclick="istruzioni.push('forward')" type="button">forward</button></td>
+            <td><button onclick="istruzioni.push('backward')" type="button">backward</button></td>
+            <td><button onclick="istruzioni.push('up')" type="button">up</button></td>
+            <td><button onclick="istruzioni.push('down')" type="button">down</button></td>
+            <td><button onclick="istruzioni.push('left')" type="button">left</button></td>
+            <td><button onclick="istruzioni.push('right')" type="button">right</button></td>
+            <td><button onclick="istruzioni.push('land')" type="button">land</button></td>
+            <td><button onclick="istruzioni.push('rotateRight')" type="button">rotateright</button></td>
+            <td><button onclick="istruzioni.push('rotateLeft')" type="button">rotateleft</button></td>
             <td><button onclick="Esegui()" type="button">Esegui istruzioni</button></td>
         </tr> 
+        <tr></tr>
+        <tr>
+            <td><button onclick="EseguiPriority('takeOff')" type="button">takeOff</button></td>
+            <td><button onclick="EseguiPriority('forward')" type="button">forward</button></td>
+            <td><button onclick="EseguiPriority('backward')" type="button">backward</button></td>
+            <td><button onclick="EseguiPriority('up')" type="button">up</button></td>
+            <td><button onclick="EseguiPriority('down')" type="button">down</button></td>
+            <td><button onclick="EseguiPriority('left')" type="button">left</button></td>
+            <td><button onclick="EseguiPriority('right')" type="button">right</button></td>
+            <td><button onclick="EseguiPriority('land')" type="button">land</button></td>
+            <td><button onclick="EseguiPriority('rotateRight')" type="button">rotateright</button></td>
+            <td><button onclick="EseguiPriority('rotateLeft')" type="button">rotateleft</button></td>
+        </tr>
     </table>
     
     

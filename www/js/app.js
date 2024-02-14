@@ -1,75 +1,92 @@
-//const { response } = require("express");
-
 var istruzioni = [];
+var active = false;
+var priority = false;
 
-function Connect(){
-    console.log("Connect")
-    fetch('/connect', {method: 'POST'})
-}
-function TakeOff () {
-    console.log("Take off")
-    istruzioni.push("takeOff")
-    //fetch('/takeOff',  {method: 'POST'})
-}
-function Land () {
-    console.log("Land")
-    istruzioni.push("land")
-    //fetch('/land',  {method: 'POST'})
-}
-function Forward () {
-    console.log("move")
-    istruzioni.push("forward")
-    //fetch('/forward',  {method: 'POST'})
-}
-function RotateRight () {
-    console.log("rotate right")
-    istruzioni.push("rotateright")
-    //fetch('/rotateright',  {method: 'POST'})
-}
-function RotateLeft () {
-    console.log("rotate left")
-    istruzioni.push("rotateleft")
-    //fetch('/rotateleft',  {method: 'POST'})
-}
+
 async function Esegui () {
-    //document.getElementById("esegui").disabled = true;
-
-    console.lot("Eseguendo!")
-    istruzioni2 = istruzioni
-    istruzioni = []
-    i=0
-
-    console.log(istruzioni2);
-    if(istruzioni2.length>0){
-        try{
-            fetch('/connect', {method: 'POST'});
-        }
-        catch(err)
-        {
-            console.log("Catturato" + err);
-        }
-
-        await wait(2000)
-        for(i=0;i<istruzioni2.length;i++){
-            /*while(!response.ok){
-                console.log("Sto aspettando");
-            }*/    
+    
+    if(!active)
+    {
+        active = true;
+        console.log("Eseguendo!")
+        istruzioni2 = istruzioni
+        istruzioni = []
+        i=0
+    
+        console.log(istruzioni2);
+        if(istruzioni2.length>0){
             try{
-                response = fetch('/'+istruzioni2[i], {method: 'POST'});
+                fetch('/connect', {method: 'POST'});
             }
             catch(err)
             {
                 console.log("Catturato" + err);
             }
-            /*setTimeout(function(){
-            }, 5000); */
-            await wait(8000)  
+    
+            await wait(2000)
+            for(i=0;i<istruzioni2.length && !priority;i++){
 
-            console.log(istruzioni2[i] + " fatta.") 
+                try{
+                    response = fetch('/'+istruzioni2[i], {method: 'POST'});
+                }
+                catch(err)
+                {
+                    console.log("Catturato" + err);
+                }
+
+                await wait(8000)  
+    
+                console.log(istruzioni2[i] + " fatta.") 
+            }
         }
+        active = false;
+    }
+    else
+    {
+        console.log("Sta già facendo altro!!")
+    }
+    
+}
+
+
+
+async function EseguiPriority (instruction) {
+    
+    priority = true;
+    while(active) //aspettiamo finche il comando precedente finisce
+    {
+        console.log(".")
+        await wait(1000)
+    } 
+    
+    active = true;
+    console.log("Eseguendo comando Priority!")
+    try
+    {
+        fetch('/connect', {method: 'POST'});
+    }
+    catch(err)
+    {
+        console.log("Catturato" + err);
     }
 
-    //document.getElementById("esegui").disabled = false;
+    await wait(2000)
+
+
+    try{
+        response = fetch('/'+instruction, {method: 'POST'});
+    }
+    catch(err)
+    {
+        console.log("Catturato" + err);
+    }
+
+    await wait(8000)  
+
+    console.log(instruction + " fatta.") 
+    
+    priority = false;
+    active = false;
 }
 
 const wait = (msec) => new Promise((resolve, _) => {
