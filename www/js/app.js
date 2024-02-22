@@ -1,12 +1,13 @@
 var istruzioni = [];
 var active = false;
 var priority = false;
-
+var log = document.getElementById("log");
 
 async function Esegui () {
     
     if(!active)
     {
+        log.innerHTML = " STA ESEGUENDO";
         active = true;
         console.log("Eseguendo!")
         istruzioni2 = istruzioni
@@ -40,11 +41,15 @@ async function Esegui () {
             }
         }
         active = false;
+        log.innerHTML = "";
     }
     else
     {
+        log.innerHTML = " Sta già facendo altro!! "
+        istruzioni = []
         console.log("Sta già facendo altro!!")
     }
+    
     
 }
 
