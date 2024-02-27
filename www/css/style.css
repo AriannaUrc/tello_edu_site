@@ -1,11 +1,100 @@
+body{
+    color : red;
+}
+
+/* CUSTOM FILL CLASS*/
 .fill {
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden
+    overflow: hidden;
 }
 .fill img {
     flex-shrink: 0;
     min-width: 100%;
-    min-height: 100%
+    max-width: 100%;
+    min-height: 100%;
+    max-height: 100%;
+}
+
+
+
+
+/* CUSTOM WIDTHS */
+.w-10, .w-xs-10 { width: 9vw!important; }
+.w-15, .w-xs-15 { width: 14vw!important; }
+.w-20, .w-xs-20 { width: 19vw!important; }
+.w-25, .w-xs-25 { width: 24vw!important; }
+.w-50, .w-xs-50 { width: 49vw!important; }
+.w-75, .w-xs-75 { width: 74vw!important; }
+.w-100, .w-xs-100 { width: 99vw!important; }
+
+/* BREAKPOINTS */
+
+/* SM breakpoint */
+@media (min-width: 576px) {
+    /* CUSTOM WIDTHS */
+    .w-sm-10 { width: 10vw!important; }
+    .w-sm-15 { width: 15vw!important; }
+    .w-sm-20 { width: 20vw!important; }
+}
+
+/* MD breakpoint*/
+@media (min-width: 768px) {
+    /* CUSTOM WIDTHS */
+    .w-md-10 { width: 10vw!important; }
+    .w-md-15 { width: 15vw!important; }
+    .w-md-20 { width: 20vw!important; }
+}
+
+/* LG breakpoint */
+@media (min-width: 992px) {
+    /* CUSTOM WIDTHS */
+    .w-lg-10 { width: 10vw!important; }
+    .w-lg-15 { width: 15vw!important; }
+    .w-lg-20 { width: 20vw!important; }
+}
+
+
+
+/* CUSTOM HIGHTS */
+.h-10, .h-xs-10 { height: 10vh!important; }
+.h-15, .h-xs-15 { height: 15vh!important; }
+.h-20, .h-xs-20 { height: 20vh!important; }
+.h-25, .h-xs-25 { height: 25vh!important; }
+.h-50, .h-xs-50 { height: 50vh!important; }
+.h-75, .h-xs-75 { height: 75vh!important; }
+.h-100, .h-xs-100 { height: 100vh!important; }
+
+/* BREAKPOINTS */
+
+/* SM breakpoint */
+@media (min-width: 576px) {
+    /* CUSTOM HIGHTS */
+    .h-sm-25 { height: 25vh!important; }
+    .h-sm-50 { height: 50vh!important; }
+    .h-sm-75 { height: 75vh!important; }
+    .h-sm-75 { height: 100vh!important; }
+}
+
+/* MD breakpoint*/
+@media (min-width: 768px) {
+    /* CUSTOM HIGHTS */
+    .h-md-25 { height: 25vh!important; }
+    .h-md-50 { height: 50vh!important; }
+    .h-md-75 { height: 75vh!important; }
+    .h-md-75 { height: 100vh!important; }
+}
+
+/* LG breakpoint */
+@media (min-width: 992px) {
+    /* CUSTOM HIGHTS */
+    .h-lg-25 { height: 25vh!important; }
+    .h-lg-50 { height: 50vh!important; }
+    .h-lg-75 { height: 75vh!important; }
+    .h-lg-75 { height: 100vh!important; }
+}
+
+.arrow{
+    
 }
