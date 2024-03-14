@@ -16,13 +16,13 @@ async function Esegui () {
     
         console.log(istruzioni2);
         if(istruzioni2.length>0){
-            try{
+            /*try{
                 fetch('/connect', {method: 'POST'});
             }
             catch(err)
             {
                 console.log("Catturato" + err);
-            }
+            }*/
     
             await wait(2000)
             for(i=0;i<istruzioni2.length && !priority;i++){
@@ -65,7 +65,7 @@ async function EseguiPriority (instruction) {
     } 
     
     active = true;
-    console.log("Eseguendo comando Priority!")
+    /*console.log("Eseguendo comando Priority!")
     try
     {
         fetch('/connect', {method: 'POST'});
@@ -73,7 +73,7 @@ async function EseguiPriority (instruction) {
     catch(err)
     {
         console.log("Catturato" + err);
-    }
+    }*/
 
     await wait(2000)
 

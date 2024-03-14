@@ -97,13 +97,36 @@ const beforeStartApi = async function () {
         const dgram = require('dgram');
         const telloSocket = dgram.createSocket('udp4');
         telloSocket.bind(telloPort);
-
+        await new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve();
+            }, 2000);
+        }
+        );
+        
         try {
             telloSocket.send('command', telloPort, telloHost);
+
+            await new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve();
+                }, 2000);
+            }
+            );
+
             telloSocket.send('streamon', telloPort, telloHost);
+            
+            await new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve();
+                }, 2000);
+            }
+            );
+
+            console.log("ok")       
+        } 
         
-            console.log("streamON ok.")            
-        } catch (error) {
+        catch (error) {
             console.log(error);
         }
 

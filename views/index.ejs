@@ -37,7 +37,7 @@
             <div class="border border-success col-12 container"> <!--Controlli quando spazio si prendono le freccie-->
 
               <!--Freccia su-->
-              <div class="row justify-content-center"> 
+              <div onclick="EseguiPriority('forward')" class="row justify-content-center"> 
                   <div class="w-10 h-10 arrow fill">
                     <img src="img/arrowU.png" class=" img-fluid rounded float-left" alt="...">
                   </div>
@@ -45,17 +45,17 @@
 
               <!--Freccia destra, sinistra-->
               <div class="row"> 
-                <div class="w-10 h-10 arrow fill">
+                <div onclick="EseguiPriority('left')" class="w-10 h-10 arrow fill">
                   <img src="img/arrowL.png" class=" img-fluid rounded" alt="...">
                 </div>
-                <div class="w-10 h-10 arrow ml-auto fill "> <!--float-right non funziona in flexbox ma ml-auto ti porta allo stesso effetto-->
+                <div onclick="EseguiPriority('right')" class="w-10 h-10 arrow ml-auto fill "> <!--float-right non funziona in flexbox ma ml-auto ti porta allo stesso effetto-->
                   <img src="img/arrowR.png" class=" img-fluid rounded" alt="...">
                 </div>
               </div>
 
               <!--Freccia giu-->
               <div class="row justify-content-center"> 
-                <div class="w-10 h-10 arrow fill">
+                <div onclick="EseguiPriority('backward')" class="w-10 h-10 arrow fill">
                   <img src="img/arrowD.png" class=" img-fluid rounded float-left" alt="...">
                 </div>
               </div>
@@ -68,24 +68,24 @@
 
             <!--Freccia su-->
             <div class="row justify-content-center"> 
-                <div class="w-10 h-10 arrow fill">
+                <div onclick="console.log('takeOff'); EseguiPriority('takeOff')" class="w-10 h-10 arrow fill">
                   <img src="img/arrowU.png" class=" img-fluid rounded float-left" alt="...">
                 </div>
             </div>
 
             <!--Freccia ruota destra, ruota sinistra-->
             <div class="row"> 
-              <div class="w-10 h-10 arrow fill">
+              <div onclick="EseguiPriority('rotateLeft')"  class="w-10 h-10 arrow fill">
                 <img src="img/arrowRL.png" class=" img-fluid rounded" alt="...">
               </div>
-              <div class="w-10 h-10 arrow ml-auto fill "> <!--float-right non funziona in flexbox ma ml-auto ti porta allo stesso effetto-->
+              <div onclick="EseguiPriority('rotateRight')" class="w-10 h-10 arrow ml-auto fill "> <!--float-right non funziona in flexbox ma ml-auto ti porta allo stesso effetto-->
                 <img src="img/arrowRR.png" class=" img-fluid rounded" alt="...">
               </div>
             </div>
 
             <!--Freccia giu-->
             <div class="row justify-content-center"> 
-              <div class="w-10 h-10 arrow fill">
+              <div onclick="EseguiPriority('land')" class="w-10 h-10 arrow fill">
                 <img src="img/arrowD.png" class=" img-fluid rounded float-left" alt="...">
               </div>
             </div>
