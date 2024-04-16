@@ -114,7 +114,8 @@ const refresh = async function (){
         //console.log(`Battery: ${battery}`)
 
         //telloSocket.send('speed?', telloPort, telloHost);
-        Commandrefresh();
+        telloSocket.send('command', telloPort, telloHost);
+        //console.log("command")
         telloSocket.send('battery?', telloPort, telloHost);
          
     } 
@@ -326,7 +327,7 @@ beforeStartApi()
         app.listen(port, function () {
             console.log(`app listening at \x1b[32mport ${port}\x1b[0m`);
         });
-        setTimeout(function(){setInterval(Commandrefresh, 5000);}, 10000)
+        setTimeout(function(){setInterval(refresh, 5000);}, 10000)
 
         /*setTimeout(function(){
 
