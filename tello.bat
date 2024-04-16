@@ -1,5 +1,5 @@
 @echo off
-set SSID=TELLO-ED410E
+set SSID=TELLO-ED4072
 
 echo Connessione alla rete WiFi %SSID%...
 

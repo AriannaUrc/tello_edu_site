@@ -1,3 +1,5 @@
+//const { Actor } = require("git");
+
 var istruzioni = [];
 var active = false;
 var priority = false;
@@ -9,6 +11,7 @@ async function Esegui () {
     {
         log.innerHTML = " STA ESEGUENDO";
         active = true;
+        
         console.log("Eseguendo!")
         istruzioni2 = istruzioni
         istruzioni = []
@@ -26,7 +29,6 @@ async function Esegui () {
     
             await wait(2000)
             for(i=0;i<istruzioni2.length && !priority;i++){
-
                 try{
                     response = fetch('/'+istruzioni2[i], {method: 'POST'});
                 }
@@ -89,10 +91,23 @@ async function EseguiPriority (instruction) {
     await wait(8000)  
 
     console.log(instruction + " fatta.") 
-    
     priority = false;
     active = false;
 }
+
+
+/*function refresh(){
+    console.log("is wow?" + wow)
+    if(wow){
+        console.log("refresh-js")
+        fetch('/refresh', {method: 'POST'})
+    }
+    else{
+        //fetch('/refresh', {method: 'POST'})
+    }
+}*/
+
+//setTimeout(function(){setInterval(refresh, 10000);}, 5000)
 
 const wait = (msec) => new Promise((resolve, _) => {
     setTimeout(resolve, msec)});

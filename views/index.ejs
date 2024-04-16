@@ -24,7 +24,7 @@
       <div class="row"> <!--to center: justify-content-center-->
 
           <!--Streaming-->
-          <div class="w-75 h-75 border border-info fill">
+          <div class="w-50 h-75 border border-info fill">
             <img src="/stream" class=" img-fluid rounded float-left" alt="...">
           </div>
 
@@ -68,7 +68,7 @@
 
             <!--Freccia su-->
             <div class="row justify-content-center"> 
-                <div onclick="console.log('takeOff'); EseguiPriority('takeOff')" class="w-10 h-10 arrow fill">
+                <div onclick="console.log('up'); EseguiPriority('takeOff')" class="w-10 h-10 arrow fill">
                   <img src="img/arrowU.png" class=" img-fluid rounded float-left" alt="...">
                 </div>
             </div>
@@ -85,7 +85,7 @@
 
             <!--Freccia giu-->
             <div class="row justify-content-center"> 
-              <div onclick="EseguiPriority('land')" class="w-10 h-10 arrow fill">
+              <div onclick="EseguiPriority('down')" class="w-10 h-10 arrow fill">
                 <img src="img/arrowD.png" class=" img-fluid rounded float-left" alt="...">
               </div>
             </div>
@@ -95,7 +95,25 @@
 
       <div class="row">
 
-        <div class="h-25 w-100 border border-danger">Column</div>
+        <div class="h-25 w-100 border border-danger">Column
+          <h2>Comandi Immediati</h2>
+          <table> 
+          
+            <tr>
+                <td><button onclick="EseguiPriority('takeOff')" type="button">takeOff</button></td>
+                <td><button onclick="EseguiPriority('forward')" type="button">forward</button></td>
+                <td><button onclick="EseguiPriority('backward')" type="button">backward</button></td>
+                <td><button onclick="EseguiPriority('up')" type="button">up</button></td>
+                <td><button onclick="EseguiPriority('down')" type="button">down</button></td>
+                <td><button onclick="EseguiPriority('left')" type="button">left</button></td>
+                <td><button onclick="EseguiPriority('right')" type="button">right</button></td>
+                <td><button onclick="EseguiPriority('land')" type="button">land</button></td>
+                <td><button onclick="EseguiPriority('rotateRight')" type="button">rotateright</button></td>
+                <td><button onclick="EseguiPriority('rotateLeft')" type="button">rotateleft</button></td>
+            </tr>
+        </table>
+        </div>
+        
       </div>
     </div>
 
