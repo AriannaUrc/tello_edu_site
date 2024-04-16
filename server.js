@@ -26,7 +26,7 @@ app.use('/users', userRouter)
 
 
 
-const telloID = 'TELLO-ED4072'//TELLO-F03CE6';
+const telloID = 'TELLO-ED410E'//TELLO-F03CE6';
 const telloHost = '192.168.10.1';
 const telloPort = 8889;
 
@@ -85,82 +85,129 @@ app.get('/stream', (req, res) => {
 
 });
 
+const dgram = require('dgram');
+//const { battery } = require('tellojs/src/commands/read');
+const telloSocket = dgram.createSocket('udp4');
+telloSocket.bind(telloPort);
+const TelloWIFIConnect = require('./TelloConnect').TelloWIFIConnect;
+
+
+telloSocket.on('message', (message, info) => {
+    // get the information about server address, port, and size of packet received.
+  
+    console.log('Address: ', info.address, 'Port: ', info.port, 'Size: ', info.size)
+  
+    //read message from server
+  
+    console.log('Message from server', message.toString())
+  })
+
+const refresh = async function (){
+    try {
+
+        /*telloSocket.send('command', telloPort, telloHost);
+         
+        telloSocket.send('time?', telloPort, telloHost);
+        telloSocket.send('speed?', telloPort, telloHost);   */
+        //var battery;
+        //telloSocket.listen(telloPort, telloHost, battery)         
+        //console.log(`Battery: ${battery}`)
+
+        //telloSocket.send('speed?', telloPort, telloHost);
+        Commandrefresh();
+        telloSocket.send('battery?', telloPort, telloHost);
+         
+    } 
+    
+    catch (error) {
+        console.log( "catched in refresh" + error);
+    }
+}
+
+
+/*const Commandrefresh = async function (){
+    try {
+        telloSocket.send('command', telloPort, telloHost);
+        console.log("command")
+    } 
+    
+    catch (error) {
+        console.log( "catched in refresh" + error);
+    }
+}*/
 
 //connetiti al wifi e prerara il drone
 const beforeStartApi = async function () {
     try {
-
-        const TelloWIFIConnect = require('./TelloConnect').TelloWIFIConnect;
-
         await TelloWIFIConnect(telloID);
 
-        const dgram = require('dgram');
-        const telloSocket = dgram.createSocket('udp4');
-        telloSocket.bind(telloPort);
         await new Promise((resolve, reject) => {
             setTimeout(() => {
                 resolve();
             }, 2000);
         }
         );
-        
-        try {
-            telloSocket.send('command', telloPort, telloHost);
 
-            await new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    resolve();
-                }, 2000);
-            }
-            );
+        telloSocket.send('command', telloPort, telloHost);
 
-            telloSocket.send('streamon', telloPort, telloHost);
-            
-            await new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    resolve();
-                }, 2000);
-            }
-            );
-
-            console.log("ok")       
-        } 
-        
-        catch (error) {
-            console.log(error);
+        await new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve();
+            }, 4000);
         }
+        );
+
+        telloSocket.send('streamon', telloPort, telloHost);
+        
+        await new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve();
+            }, 2000);
+        }
+        );
+
+        telloSocket.send('streamon', telloPort, telloHost);
+        
+
+        await new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve();
+            }, 2000);
+        }
+        );
+
+        console.log("ok")    
 
 
     } catch (e) {
         console.error(e);
-    }
+    } 
 };
 
 
 
-app.post('/connect', async (req, res) => {
+/*app.post('/refresh', async (req, res) => {
     try{
-        console.log('Connecting');
-        await sdk.control.connect()
-        let battery = await sdk.read.battery() 
-        console.log(`Battery: ${battery}`)
-        res.sendStatus(200);
+    console.log('refresh data...');
+    refresh();
 
-        console.log('Connected');
+    telloSocket.send('battery?', telloPort, telloHost);      
 
     } catch(error){
-        console.log("Catched: " + error)
+        console.log("Catched while refreshing: " + error)
     } 
-});
+
+})*/
 
 app.post('/takeOff', async (req, res) => {
     try{
     console.log('Taking off...');
-    await sdk.control.takeOff()
+    //await sdk.control.takeOff()
+    telloSocket.send('takeoff', telloPort, telloHost);
     await wait(waitMedium)
     console.log('took off')
     } catch(error){
-        console.log("Catched: " + error)
+        console.log("Catched in take off: " + error)
     } 
 
 })
@@ -168,79 +215,79 @@ app.post('/takeOff', async (req, res) => {
 app.post('/forward', async (req, res) => {
     try{
     console.log('Moving forward...');
-    await sdk.control.move.front(100)
+    telloSocket.send('forward 100', telloPort, telloHost);
     await wait(waitMedium)
     console.log('moved')
     } catch(error){
-        console.log("Catched: " + error)
+        console.log("Catched in forward: " + error)
     } 
 })
 
 app.post('/backward', async (req, res) => {
     try{
     console.log('Moving backward...');
-    await sdk.control.move.back(100)
+    telloSocket.send('back 100', telloPort, telloHost);
     await wait(waitMedium)
     console.log('moved')
     } catch(error){
-        console.log("Catched: " + error)
+        console.log("Catched in backward: " + error)
     } 
 })
 
 app.post('/up', async (req, res) => {
     try{
     console.log('Moving up...');
-    await sdk.control.move.up(100)
+    telloSocket.send('up 100', telloPort, telloHost);
     await wait(waitMedium)
     console.log('moved')
     } catch(error){
-        console.log("Catched: " + error)
+        console.log("Catched in up: " + error)
     } 
 })
 
 app.post('/down', async (req, res) => {
     try{
     console.log('Moving down...');
-    await sdk.control.move.down(100)
+    telloSocket.send('down 100', telloPort, telloHost);
     await wait(waitMedium)
     console.log('moved')
     } catch(error){
-        console.log("Catched: " + error)
+        console.log("Catched in down: " + error)
     } 
 })
 
 app.post('/left', async (req, res) => {
     try{
     console.log('Moving left...');
-    await sdk.control.move.left(100)
+    telloSocket.send('left 100', telloPort, telloHost);
     await wait(waitMedium)
     console.log('moved')
     } catch(error){
-        console.log("Catched: " + error)
+        console.log("Catched in left: " + error)
     } 
 })
 
 app.post('/right', async (req, res) => {
     try{
     console.log('Moving right...');
-    await sdk.control.move.right(100)
+    telloSocket.send('right 100', telloPort, telloHost);
     await wait(waitMedium)
     console.log('moved')
     } catch(error){
-        console.log("Catched: " + error)
+        console.log("Catched in right: " + error)
     } 
 })
 
 app.post('/rotateRight', async (req, res) => {
     try{
         console.log('rotate right...');
-        await sdk.control.rotate.clockwise(90)
+        telloSocket.send('cw 90', telloPort, telloHost);
         await wait(waitMedium)
         console.log('rotated')
     }
     catch(error)
     {
-        console.log("Catched: " + error)
+        console.log("Catched in cw: " + error)
     } 
     
 })
@@ -248,13 +295,13 @@ app.post('/rotateRight', async (req, res) => {
 app.post('/rotateleft', async (req, res) => {
     try{
         console.log('rotate left...');
-        await sdk.control.rotate.counterClockwise(90)
+        telloSocket.send('ccw 90', telloPort, telloHost);
         await wait(waitMedium)
         console.log('rotated')
     }
     catch(error)
     {
-        console.log("Catched: " + error)
+        console.log("Catched ccw: " + error)
     }     
 })
 
@@ -262,12 +309,12 @@ app.post('/rotateleft', async (req, res) => {
 app.post('/land', async (req, res) => { //add try catch
     try{
     console.log('landing...');
-    await sdk.control.land()
+    telloSocket.send('land', telloPort, telloHost);
     await wait(waitMedium)
     console.log('landed')
     } catch(error)
     {
-    console.log("Catched: " + error)
+    console.log("Catched in landing: " + error)
     } 
     
 })
@@ -279,7 +326,13 @@ beforeStartApi()
         app.listen(port, function () {
             console.log(`app listening at \x1b[32mport ${port}\x1b[0m`);
         });
+        setTimeout(function(){setInterval(Commandrefresh, 5000);}, 10000)
 
+        /*setTimeout(function(){
+
+            telloSocket.send('command', telloPort, telloHost);}, 10000)*/
 
     })
-    .catch((err) => { console.error(err);});
+    .catch((err) => { console.error("main" + err);});
+
+    
