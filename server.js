@@ -306,6 +306,21 @@ app.post('/rotateleft', async (req, res) => {
     }     
 })
 
+
+
+app.post('/emergency', async (req, res) => {
+    try{
+        console.log('rotate left...');
+        telloSocket.send('emergency', telloPort, telloHost);
+        await wait(waitMedium)
+        console.log('emergency landing')
+    }
+    catch(error)
+    {
+        console.log("Catched during emergency?: " + error)
+    }     
+})
+
 //landing function
 app.post('/land', async (req, res) => { //add try catch
     try{

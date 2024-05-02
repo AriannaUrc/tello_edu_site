@@ -3,7 +3,8 @@
 var istruzioni = [];
 var active = false;
 var priority = false;
-var log = document.getElementById("log");
+var log = document.getElementById("logDoc");
+//var log = document.getElementsByTagName("span")
 
 async function Esegui () {
     
@@ -31,6 +32,7 @@ async function Esegui () {
             for(i=0;i<istruzioni2.length && !priority;i++){
                 try{
                     response = fetch('/'+istruzioni2[i], {method: 'POST'});
+                    log.innerHTML = " STA ESEGUENDO: " + istruzioni2[i];
                 }
                 catch(err)
                 {
@@ -55,33 +57,31 @@ async function Esegui () {
     
 }
 
-
+var waitQueue = []
 
 async function EseguiPriority (instruction) {
     
-    priority = true;
-    while(active) //aspettiamo finche il comando precedente finisce
+    //priority = true;
+    if(instruction != "emergency") //aspettiamo finche il comando precedente finisce
     {
-        console.log(".")
-        await wait(1000)
+        if(active && !priority) //se un comando non di priorita sta venendo eseguito aspetta
+        {
+            priority = true;
+            await wait(8000);
+        }
+        waitQueue.unshift(instruction) //inserisci comando nella coda di attesa
+        return
     } 
-    
-    active = true;
-    /*console.log("Eseguendo comando Priority!")
-    try
     {
-        fetch('/connect', {method: 'POST'});
+        //E un emergenza!!!!!
+        fetch('/emergency', {method: 'POST'})
     }
-    catch(err)
-    {
-        console.log("Catturato" + err);
-    }*/
-
-    await wait(2000)
-
+    
+    /*active = true;
 
     try{
         response = fetch('/'+instruction, {method: 'POST'});
+        log.innerHTML = " STA ESEGUENDO: " + instruction;
     }
     catch(err)
     {
@@ -91,23 +91,53 @@ async function EseguiPriority (instruction) {
     await wait(8000)  
 
     console.log(instruction + " fatta.") 
+    log.innerHTML = " ";
     priority = false;
-    active = false;
+    active = false;*/
 }
 
 
-/*function refresh(){
-    console.log("is wow?" + wow)
-    if(wow){
-        console.log("refresh-js")
-        fetch('/refresh', {method: 'POST'})
+async function refresh(){
+
+    console.log(waitQueue)
+    if(waitQueue.length != 0) //se ci sono comandi
+    {
+        priority = true; //inizia a eseguire
+        active = true;
+        /*for(i=0; i<waitQueue.length; i++)
+        {*/
+        try
+        {
+            var command = waitQueue.pop();
+            response = fetch('/'+ command, {method: 'POST'});
+            log.innerHTML = " STA ESEGUENDO: " + command;
+            log.innerHTML += "<br><br>" + waitQueue;
+
+            await wait(10000)  
+
+            console.log(command + " fatta.") 
+            log.innerHTML = "Fatto";
+            log.innerHTML += "<br><br>" + waitQueue;
+        }
+        catch(err)
+        {
+            console.log("Catturato" + err);
+        }
+
+            
+        //}
+        active = false;
+        priority = false;
     }
     else{
-        //fetch('/refresh', {method: 'POST'})
+        await wait(1000);
     }
-}*/
+    refresh()
+}
 
 //setTimeout(function(){setInterval(refresh, 10000);}, 5000)
 
+setTimeout(refresh, 3000)
+  
 const wait = (msec) => new Promise((resolve, _) => {
     setTimeout(resolve, msec)});
