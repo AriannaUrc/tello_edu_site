@@ -10,7 +10,7 @@ async function Esegui () {
     
     if(!active)
     {
-        log.innerHTML = " STA ESEGUENDO";
+        //log.innerHTML = " STA ESEGUENDO";
         active = true;
         
         console.log("Eseguendo!")
@@ -32,7 +32,7 @@ async function Esegui () {
             for(i=0;i<istruzioni2.length && !priority;i++){
                 try{
                     response = fetch('/'+istruzioni2[i], {method: 'POST'});
-                    log.innerHTML = " STA ESEGUENDO: " + istruzioni2[i];
+                    //log.innerHTML = " STA ESEGUENDO: " + istruzioni2[i];
                 }
                 catch(err)
                 {
@@ -45,13 +45,16 @@ async function Esegui () {
             }
         }
         active = false;
-        log.innerHTML = "";
+        //log.innerHTML = "";
+        return true;
     }
     else
     {
-        log.innerHTML = " Sta già facendo altro!! "
+        
+        //log.innerHTML = " Sta già facendo altro!! "
         istruzioni = []
         console.log("Sta già facendo altro!!")
+        return false;
     }
     
     

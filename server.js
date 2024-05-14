@@ -26,7 +26,7 @@ app.use('/users', userRouter)
 
 
 
-const telloID = 'TELLO-ED410E'//TELLO-F03CE6';
+const telloID = 'TELLO-ED4072'//TELLO-F03CE6';
 const telloHost = '192.168.10.1';
 const telloPort = 8889;
 
@@ -293,7 +293,7 @@ app.post('/rotateRight', async (req, res) => {
     
 })
 
-app.post('/rotateleft', async (req, res) => {
+app.post('/rotateLeft', async (req, res) => {
     try{
         console.log('rotate left...');
         telloSocket.send('ccw 90', telloPort, telloHost);

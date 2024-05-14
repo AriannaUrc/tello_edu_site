@@ -1,128 +1,478 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Title</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drone Tello Control</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  </head>
-  <body>
-      
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <style>
+        body {
+            background-color: #f9f9f9; /* Light Gray */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333; /* Dark Gray Text */
+        }
+        .container-fluid {
+            background-color: #fff; /* White */
+            border-radius: 15px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); /* Soft Shadow */
+            padding: 30px;
+            margin-top: 50px;
+        }
+        .title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .live-stream {
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        .command-btn {
+            border-radius: 8px;
+            font-size: 16px;
+            padding: 12px 20px;
+            margin-bottom: 15px;
+            transition: background-color 0.3s;
+        }
+        .command-btn:hover {
+            background-color: #f33; /* Red */
+            border-color: #f33;
+        }
+        .emergency-btn {
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 20px;
+            padding: 16px;
+            transition: background-color 0.3s;
+        }
+        .emergency-btn:hover {
+            background-color: #f33; /* Red */
+        }
+        .night-mode {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            color: #666; /* Dark Gray */
+        }
+        .night-mode-label {
+            margin-right: 10px;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+        input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+        .slider.round {
+            border-radius: 34px;
+        }
+        .slider.round:before {
+            border-radius: 50%;
+        }
+        .night-mode-description {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+    </style>
+
+    <style>
+        .table-container {
+            margin-top: 30px;
+        }
+        .drag-item {
+            cursor: grab;
+        }
+        .drop-area {
+            /*border: 2px dashed #ccc;*/
+            padding: 3px;
+            min-height: 200px; /* Minimum height for better drop area */
+            /*background-color: #f9f9f9;*/
+        }
+    </style>
+</head>
+<body>
+
+<!-- Night Mode Switch -->
 
 
-    <div id="pizza" class="border border-info col-12 container">
-      <div class="row"> <!--to center: justify-content-center-->
+<div class="container-fluid col-md-10 col-lg-10">
+    <h1 class="title">Drone Tello Control</h1>
+    <div class="row justify-content-center">
+        
+        <div class="col-lg-6 live-stream padding-3 mt-3">
+            <img src="/stream" class="img-fluid" id="stream" alt="Live Stream">
+        </div>
+        <div class="col-lg-1"></div>
+        <div class="col-lg-5">
 
-          <!--Streaming-->
-          <div class="w-50 h-75 border border-info fill">
-            <img src="/stream" class=" img-fluid rounded float-left" alt="...">
-          </div>
-
-          <!--Comandi immediati-->
-          <div class="w-25 border border-danger"> 
+            <div class="row mt-3">
+                <div class="night-mode">
+                <span class="night-mode-label">Dark Mode:</span>
+                <label class="switch">
+                    <input type="checkbox" id="nightModeSwitch">
+                    <span class="slider round"></span>
+                </label>
+                </div>
+            </div>
+            
 
             <div class="row">
-              
-            </div>
-            <div class="border border-success col-12 container"> <!--Controlli quando spazio si prendono le freccie-->
+                <div class="container-fluid">
+                    <h4 class="text-center mb-4">Immediate Commands</h4>
+                    <div class="row">
+                        <div class="col text-center">
+                            <button class="btn btn-danger command-btn btn-block" onclick="EseguiPriority('emergency')">Emergency Stop</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary command-btn btn-block" onclick="EseguiPriority('takeOff')">Take Off</button>
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-primary command-btn btn-block" onclick="EseguiPriority('land')">Land</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary command-btn btn-block" onclick="EseguiPriority('forward')">Forward</button>
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-primary command-btn btn-block" onclick="EseguiPriority('backward')">Backward</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary command-btn btn-block " onclick="EseguiPriority('left')">Left</button>
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-primary command-btn btn-block" onclick="EseguiPriority('right')">Right</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary command-btn btn-block" onclick="EseguiPriority('up')">Up</button>
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-primary command-btn btn-block" onclick="EseguiPriority('down')">Down</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary command-btn btn-block" onclick="EseguiPriority('rotateRight')">Rotate Right</button>
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-primary command-btn btn-block" onclick="EseguiPriority('rotateLeft')">Rotate Left</button>
+                        </div>
+                    </div>
 
-              <!--Freccia su-->
-              <div onclick="EseguiPriority('forward')" class="row justify-content-center"> 
-                  <div class="w-10 h-10 arrow fill">
-                    <img src="img/arrowU.png" class=" img-fluid rounded float-left" alt="...">
-                  </div>
-              </div>
-
-              <!--Freccia destra, sinistra-->
-              <div class="row"> 
-                <div onclick="EseguiPriority('left')" class="w-10 h-10 arrow fill">
-                  <img src="img/arrowL.png" class=" img-fluid rounded" alt="...">
                 </div>
-                <div onclick="EseguiPriority('right')" class="w-10 h-10 arrow ml-auto fill "> <!--float-right non funziona in flexbox ma ml-auto ti porta allo stesso effetto-->
-                  <img src="img/arrowR.png" class=" img-fluid rounded" alt="...">
-                </div>
-              </div>
 
-              <!--Freccia giu-->
-              <div class="row justify-content-center"> 
-                <div onclick="EseguiPriority('backward')" class="w-10 h-10 arrow fill">
-                  <img src="img/arrowD.png" class=" img-fluid rounded float-left" alt="...">
-                </div>
-              </div>
-            
-          </div>
-
-          <div class="w-25 h-10"></div> <!--Spazio tra i due set di freccie-->
-
-          <div class="border border-success col-12 container"> <!--Controlli quando spazio si prendono le freccie-->
-
-            <!--Freccia su-->
-            <div class="row justify-content-center"> 
-                <div onclick="console.log('up'); EseguiPriority('takeOff')" class="w-10 h-10 arrow fill">
-                  <img src="img/arrowU.png" class=" img-fluid rounded float-left" alt="...">
-                </div>
             </div>
-
-            <!--Freccia ruota destra, ruota sinistra-->
-            <div class="row"> 
-              <div onclick="EseguiPriority('rotateLeft')"  class="w-10 h-10 arrow fill">
-                <img src="img/arrowRL.png" class=" img-fluid rounded" alt="...">
-              </div>
-              <div onclick="EseguiPriority('rotateRight')" class="w-10 h-10 arrow ml-auto fill "> <!--float-right non funziona in flexbox ma ml-auto ti porta allo stesso effetto-->
-                <img src="img/arrowRR.png" class=" img-fluid rounded" alt="...">
-              </div>
+            <div class="col-lg-6 live-stream padding-3 mt-3">
+                
+                <button id="saveImageBtn" class="btn btn-success btn-block mt-3">Save Image</button>
             </div>
-
-            <!--Freccia giu-->
-            <div class="row justify-content-center"> 
-              <div onclick="EseguiPriority('down')" class="w-10 h-10 arrow fill">
-                <img src="img/arrowD.png" class=" img-fluid rounded float-left" alt="...">
-              </div>
-            </div>
-          
         </div>
-      </div>
-
-      <div class="row">
-
-        <div class="h-25 w-100 border border-danger">Column
-          <h2>Comandi Immediati</h2>
-          <table> 
-          
-            <tr>
-                <td><button onclick="EseguiPriority('takeOff')" type="button">takeOff</button></td>
-                <td><button onclick="EseguiPriority('forward')" type="button">forward</button></td>
-                <td><button onclick="EseguiPriority('backward')" type="button">backward</button></td>
-                <td><button onclick="EseguiPriority('up')" type="button">up</button></td>
-                <td><button onclick="EseguiPriority('down')" type="button">down</button></td>
-                <td><button onclick="EseguiPriority('left')" type="button">left</button></td>
-                <td><button onclick="EseguiPriority('right')" type="button">right</button></td>
-                <td><button onclick="EseguiPriority('land')" type="button">land</button></td>
-                <td><button onclick="EseguiPriority('rotateRight')" type="button">rotateright</button></td>
-                <td><button onclick="EseguiPriority('rotateLeft')" type="button">rotateleft</button></td>
-                <td><button onclick="EseguiPriority('emergency')" type="button">EMERGENCY Landing</button></td>
-            </tr>
-        </table>
-
-        <div id="logDoc" class="logDoc"> Hello :)</div>
-
-        </div>
-        
-
-      </div>
-
-     
     </div>
-    <script src="js/app.js"></script>
+
+</div>
+
+
+<div class="container table-container">
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Commands</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                    </tr>
+                </thead>
+                <tbody id="table1">
+                    <!-- <tr draggable="true" class="drag-item" ondragstart="drag(event)">
+                        <td>takeOff</td>
+                    </tr> -->
+                    <tr draggable="true" class="drag-item" ondragstart="drag(event)">
+                        <td>forward</td>
+                    </tr>
+                    <tr draggable="true" class="drag-item" ondragstart="drag(event)">
+                        <td>backward</td>
+                    </tr>
+                    <tr draggable="true" class="drag-item" ondragstart="drag(event)">
+                        <td>up</td>
+                    </tr>
+                    <tr draggable="true" class="drag-item" ondragstart="drag(event)">
+                        <td>down</td>
+                    </tr>
+                    <tr draggable="true" class="drag-item" ondragstart="drag(event)">
+                        <td>left</td>
+                    </tr>
+                    <tr draggable="true" class="drag-item" ondragstart="drag(event)">
+                        <td>right</td>
+                    </tr>
+                    <tr draggable="true" class="drag-item" ondragstart="drag(event)">
+                        <td>rotateRight</td>
+                    </tr>
+                    <tr draggable="true" class="drag-item" ondragstart="drag(event)">
+                        <td>rotateLeft</td>
+                    </tr>
+                    <!-- <tr draggable="true" class="drag-item" ondragstart="drag(event)">
+                        <td>land</td>
+                    </tr> -->
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h3>Istruzioni</h3>
+            <div class="drop-area" id="dropArea" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondragenter="dragEnter(event)">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table2">
+                        <!-- Items will be dropped here -->
+                    </tbody>
+                </table>
+                <div class="bin" onclick="clearTable()">
+                    <span class="bin-icon btn">&#128465;</span>
+                </div>
+            </div>
+            <div class="execute-btn">
+                <button class="btn-execute btn-danger" onclick="addAndExecute()">Execute</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let draggedRow = null;
+    let draggedFromTable2 = false;
+
+    function allowDrop(event) {
+        event.preventDefault();
+    }
+
+    function drag(event) {
+        event.dataTransfer.setData("text/plain", event.target.outerHTML);
+        draggedRow = event.target;
+        draggedFromTable2 = draggedRow.parentNode.id === 'table2';
+    }
+
+    function drop(event) {
+        event.preventDefault();
+        if (draggedFromTable2) {
+            // Remove the original row if it was dragged from table2
+            if (draggedRow && draggedRow.parentNode.id === 'table2') {
+                draggedRow.parentNode.removeChild(draggedRow);
+            }
+        } else {
+            const data = event.dataTransfer.getData("text/plain");
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = data;
+
+            // Make the new row draggable
+            newRow.draggable = true;
+            newRow.className = 'drag-item';
+            newRow.ondragstart = drag;
+
+            // Append the new row to the second table
+            const table2 = document.getElementById('table2');
+            table2.appendChild(newRow);
+        }
+
+        // Remove hover class when item is dropped
+        const dropArea = document.getElementById('dropArea');
+        dropArea.classList.remove('hover');
+
+        // Clear the reference to the dragged row
+        draggedRow = null;
+        draggedFromTable2 = false;
+    }
+
+    function dragEnter(event) {
+        const dropArea = document.getElementById('dropArea');
+        dropArea.classList.add('hover');
+    }
+
+    function dragLeave(event) {
+        const dropArea = document.getElementById('dropArea');
+        dropArea.classList.remove('hover');
+    }
+
+    function clearTable() {
+        const table2 = document.getElementById('table2');
+        table2.innerHTML = ''; // Clear all rows in the second table
+    }
+
+    async function addAndExecute() {
+        const table2Rows = document.querySelectorAll('#table2 tr');
+        istruzioni.push("takeOff");
+        table2Rows.forEach(row => {
+            istruzioni.push(row.querySelector('td').innerText);
+        });
+        istruzioni.push("land");
+        var ris = await Esegui();
+        clearTable();
+    }
+</script>
+
+
+<!-- Bootstrap JS and your custom JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="js/app.js"></script>
+
+
+
+<script>
+    const streamImage = document.getElementById('stream');
+    const saveImageBtn = document.getElementById('saveImageBtn');
+
+    // Function to capture the image and trigger download
+    function saveImageLocally() {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        
+        // Set canvas dimensions to match image dimensions
+        canvas.width = streamImage.width;
+        canvas.height = streamImage.height;
+
+        // Draw image onto canvas
+        context.drawImage(streamImage, 0, 0, canvas.width, canvas.height);
+
+        // Convert canvas to PNG data URL
+        const dataURL = canvas.toDataURL('image/png');
+
+        // Trigger download
+        const a = document.createElement('a');
+        a.href = dataURL;
+        a.download = 'stream_image.png';
+        a.click();
+    }
+
+    // Add click event listener to save image button
+    saveImageBtn.addEventListener('click', saveImageLocally);
+
+
+    
+</script>
+
+<script>
+    // Night Mode Switch
+    const nightModeSwitch = document.getElementById('nightModeSwitch');
+
+    nightModeSwitch.addEventListener('change', () => {
+        if (nightModeSwitch.checked) {
+            enableNightMode();
+        } else {
+            disableNightMode();
+        }
+    });
+
+    function enableNightMode() {
+        document.body.style.backgroundColor = '#121212'; /* Dark Background */
+        document.querySelectorAll('.container-fluid').forEach(item => {
+            item.style.backgroundColor = '#1e1e1e'; /* Darker Container Background */
+            item.style.color = '#fff'; /* White Text */
+        });
+
+        // Update table backgrounds and text color for night mode
+        document.querySelectorAll('table').forEach(table => {
+            table.style.backgroundColor = '#1e1e1e'; /* Darker Table Background */
+            table.style.color = '#fff'; /* White Text */
+        });
+        document.querySelectorAll('th, td').forEach(cell => {
+            cell.style.backgroundColor = '#1e1e1e'; /* Darker Cell Background */
+            cell.style.color = '#fff'; /* White Text */
+        });
+
+        // Update <h3> tags for night mode
+            document.querySelectorAll('h3').forEach(heading => {
+            heading.style.color = '#fff'; /* White Text */
+        });
+    }
+
+    function disableNightMode() {
+        document.body.style.backgroundColor = '#f9f9f9'; /* Light Gray */
+        document.querySelectorAll('.container-fluid').forEach(item => {
+            item.style.backgroundColor = '#fff'; /* White Container Background */
+            item.style.color = '#333'; /* Dark Gray Text */
+        });
+
+        // Revert table backgrounds and text color to light mode
+        document.querySelectorAll('table').forEach(table => {
+            table.style.backgroundColor = '#fff'; /* White Table Background */
+            table.style.color = '#333'; /* Dark Gray Text */
+        });
+        document.querySelectorAll('th, td').forEach(cell => {
+            cell.style.backgroundColor = '#fff'; /* White Cell Background */
+            cell.style.color = '#333'; /* Dark Gray Text */
+        });
+
+        // Revert <h3> tags to light mode
+            document.querySelectorAll('h3').forEach(heading => {
+            heading.style.color = '#333'; /* Dark Gray Text */
+        });
+    }  
+    function emergencyStop() {
+        // Code for emergency stop action
+    }
+</script>
+
+
+
+
+
+
 </body>
 </html>
+ 
+
