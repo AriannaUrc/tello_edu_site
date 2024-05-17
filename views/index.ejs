@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drone Tello Control</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    
     <style>
         body {
             background-color: #f9f9f9; /* Light Gray */
@@ -117,9 +118,15 @@
             margin-top: 5px;
         }
 
-    </style>
+        #circle {
+            width: 45px;
+            height: 45px;
+            background-color: gray;
+            border-radius: 50%;
+            transition: background-color 0.5s;
+            margin-top: 45px;
+        }
 
-    <style>
         .table-container {
             margin-top: 30px;
         }
@@ -266,7 +273,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-5">
             <h3>Istruzioni</h3>
             <div class="drop-area" id="dropArea" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondragenter="dragEnter(event)">
                 <table class="table table-bordered">
@@ -286,13 +293,22 @@
             <div class="execute-btn">
                 <button class="btn-execute btn-danger" onclick="addAndExecute()">Execute</button>
             </div>
+            
         </div>
+        <div class="col-md-1"><div id="circle"></div></div>
+        
     </div>
 </div>
 
+
+
+
+
+<!--drag and drop Js-->
 <script>
     let draggedRow = null;
     let draggedFromTable2 = false;
+    const circle = document.getElementById('circle');
 
     function allowDrop(event) {
         event.preventDefault();
@@ -358,6 +374,23 @@
         });
         istruzioni.push("land");
         var ris = await Esegui();
+
+        if (ris == true) 
+        {
+            circle.style.backgroundColor = 'green';
+        } else {
+            circle.style.backgroundColor = 'red';
+        }
+
+        await new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve();
+            }, 4000);
+        }
+        );
+
+        circle.style.backgroundColor = 'gray';
+
         clearTable();
     }
 </script>
@@ -462,15 +495,7 @@
             heading.style.color = '#333'; /* Dark Gray Text */
         });
     }  
-    function emergencyStop() {
-        // Code for emergency stop action
-    }
 </script>
-
-
-
-
-
 
 </body>
 </html>

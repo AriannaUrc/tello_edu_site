@@ -8,8 +8,10 @@ var log = document.getElementById("logDoc");
 
 async function Esegui () {
     
-    if(!active)
+    if(!active &&!priority)
     {
+        console.log("active: " + active)
+        console.log("priority: " + priority)
         //log.innerHTML = " STA ESEGUENDO";
         active = true;
         
@@ -29,8 +31,10 @@ async function Esegui () {
             }*/
     
             await wait(2000)
-            for(i=0;i<istruzioni2.length && !priority;i++){
+            for(i=0;i<istruzioni2.length;i++){
                 try{
+                    if(priority)
+                        return false
                     response = fetch('/'+istruzioni2[i], {method: 'POST'});
                     //log.innerHTML = " STA ESEGUENDO: " + istruzioni2[i];
                 }
@@ -103,7 +107,7 @@ async function EseguiPriority (instruction) {
 async function refresh(){
 
     console.log(waitQueue)
-    if(waitQueue.length != 0) //se ci sono comandi
+    if(waitQueue.length != 0 &&!active) //se ci sono comandi
     {
         priority = true; //inizia a eseguire
         active = true;
@@ -113,14 +117,14 @@ async function refresh(){
         {
             var command = waitQueue.pop();
             response = fetch('/'+ command, {method: 'POST'});
-            log.innerHTML = " STA ESEGUENDO: " + command;
-            log.innerHTML += "<br><br>" + waitQueue;
+            //log.innerHTML = " STA ESEGUENDO: " + command;
+            //log.innerHTML += "<br><br>" + waitQueue;
 
             await wait(10000)  
 
             console.log(command + " fatta.") 
-            log.innerHTML = "Fatto";
-            log.innerHTML += "<br><br>" + waitQueue;
+            //log.innerHTML = "Fatto";
+            //log.innerHTML += "<br><br>" + waitQueue;
         }
         catch(err)
         {
@@ -130,7 +134,8 @@ async function refresh(){
             
         //}
         active = false;
-        priority = false;
+        if(command == "land")
+            priority = false;
     }
     else{
         await wait(1000);

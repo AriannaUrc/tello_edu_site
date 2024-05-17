@@ -25,8 +25,30 @@ app.use('/users', userRouter)
 
 
 
+/*// Usage
+readFileContents('name.txt')
+    .then(contents => {
+        console.log(contents); // Display the contents of the file
+        telloID = contents
+    })
+    .catch(error => {
+        console.error(error); // Handle errors
+    });
 
-const telloID = 'TELLO-ED4072'//TELLO-F03CE6';
+// Usage
+readFileContents('precision.txt')
+    .then(contents => {
+        console.log(contents); // Display the contents of the file
+        const precision = contents
+    })
+    .catch(error => {
+        console.error(error); // Handle errors
+    });
+
+*/
+
+
+const telloID = 'TELLO-ED410E'//TELLO-ED4072'; 
 const telloHost = '192.168.10.1';
 const telloPort = 8889;
 
@@ -137,9 +159,11 @@ const refresh = async function (){
     }
 }*/
 
+
 //connetiti al wifi e prerara il drone
 const beforeStartApi = async function () {
     try {
+
         await TelloWIFIConnect(telloID);
 
         await new Promise((resolve, reject) => {
@@ -227,7 +251,7 @@ app.post('/forward', async (req, res) => {
 app.post('/backward', async (req, res) => {
     try{
     console.log('Moving backward...');
-    telloSocket.send('back 100', telloPort, telloHost);
+    telloSocket.send('back 100', telloPort, telloHost); //use precision;
     await wait(waitMedium)
     console.log('moved')
     } catch(error){
@@ -336,6 +360,7 @@ app.post('/land', async (req, res) => { //add try catch
 })
 
 
+
 beforeStartApi()
     .then( () => {
         const port = 3000;
@@ -343,9 +368,8 @@ beforeStartApi()
             console.log(`app listening at \x1b[32mport ${port}\x1b[0m`);
         });
         setTimeout(function(){setInterval(refresh, 5000);}, 10000)
-
         /*setTimeout(function(){
-
+            
             telloSocket.send('command', telloPort, telloHost);}, 10000)*/
 
     })
