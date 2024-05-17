@@ -1,2 +1,2 @@
 Prima di far partire l'app installare ffmpeg.exe ( buona fortuna :) ) e MJPEGServer.exe e metterli nella cartella principale del progetto.
-Accendete il drone e per partire l'app bisogna aprire il terminale e utilizzare il comando "mpn run devStart"
+Accendete il drone e per partire l'app bisogna aprire il terminale e utilizzare il comando "npm run devStart", per fare funzionare lo stream bisogna aprire un ulteriore terminale nella cartella del progetto e eseguire il comando ".\mjpegserver.exe -a 127.0.0.1:9000 -- ffmpeg -i udp://192.168.10.1:11111 -video_size 640x480 -framerate 5 -threads 5 -f mpjpeg -r 5 -q 5  -"
